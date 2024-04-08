@@ -14,7 +14,6 @@ Future<void> main() async {
 	WidgetsFlutterBinding.ensureInitialized();
 	await DesktopWindow.setWindowSize(const Size(400, 200));
 	await DesktopWindow.setMinWindowSize(const Size(400, 200));
-	// await DesktopWindow.setMaxWindowSize(const Size(400, 200));
 
   runApp(const MyApp());
 }
@@ -99,7 +98,7 @@ class FileDragAndDropState extends State<FileDragAndDrop> {
           Text(_showFileName, style: TextStyle(color: defaultColor,),),
           ElevatedButton(
             onPressed: () {
-              List imageFiles = [];
+              List<ItemClass> imageFiles = [];
               List<FileSystemEntity> file = Directory(_path).listSync();
               for(FileSystemEntity s in file) {
                 final mimeType = lookupMimeType(s.path);
