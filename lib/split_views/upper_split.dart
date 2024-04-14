@@ -5,7 +5,6 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:context_menus/context_menus.dart';
 import 'package:flutter_application_1/Model/ItemClass.dart';
 import 'package:flutter_application_1/side_image_view.dart';
-import 'package:flutter_application_1/sort_view.dart';
 import 'package:split_view/split_view.dart';
 
 class UpperSplitView extends StatefulWidget {
@@ -28,10 +27,11 @@ class UpperSplitViewState extends State<UpperSplitView> {
 
   @override
   Widget build(BuildContext context) {
+    SideImageViewState? parent = context.findAncestorStateOfType<SideImageViewState>();
+
     return ContextMenuOverlay(
-      buttonStyle: ContextMenuButtonStyle(
-        fgColor: Colors.green,
-        bgColor: Colors.red.shade100,
+      buttonStyle: const ContextMenuButtonStyle(
+        fgColor: Colors.red,
         hoverBgColor: Colors.red,
       ),
       child: Scaffold(
@@ -54,7 +54,14 @@ class UpperSplitViewState extends State<UpperSplitView> {
           },
           children: [
             const Center(child: SideImageView()),
-            Center(child: Image.file(File(selectedImg))),
+            Draggable(
+              data: selectedImg,
+              feedback: SizedBox(width: 150, height: 150, child: Center(child: Image.file(File(selectedImg), opacity: const AlwaysStoppedAnimation(0.7)))),
+              dragAnchorStrategy: (draggable, context, position) {
+                return const Offset(75, 75);
+              },
+              child: Center(child: Image.file(File(selectedImg)))
+            )
           ],
         )
       ),

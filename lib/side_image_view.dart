@@ -1,8 +1,13 @@
 import 'dart:io';
+import 'dart:isolate';
 
+import 'package:drag_and_drop_lists/drag_and_drop_list_interface.dart';
+import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:context_menus/context_menus.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Model/ItemClass.dart';
 import 'package:flutter_application_1/sort_view.dart';
@@ -17,7 +22,7 @@ class SideImageView extends StatefulWidget {
 
 class SideImageViewState extends State<SideImageView> {
   List<ItemClass> items = [];
-  Set colors = {};
+  Set select = {};
 
   @override
   void initState() {
@@ -32,10 +37,28 @@ class SideImageViewState extends State<SideImageView> {
     });
   }
 
+  void reorderOneItem(int oldIdx, int newIdx) {
+    if (oldIdx < newIdx) {
+      newIdx -= 1;
+    }
+
+    setState(() {
+      final item = items.removeAt(oldIdx);
+      items.insert(newIdx, item);
+    });
+  }
+
+  static void scrollFun(ScrollController sc) async {
+    sc.animateTo(sc.position.maxScrollExtent, duration: Duration(milliseconds: 300), curve: Curves.ease);
+  }
+
   ReorderableListView makeContainer(BuildContext context) {
     UpperSplitViewState? parent = context.findAncestorStateOfType<UpperSplitViewState>();
 
+    ScrollController sc = ScrollController();
+
     return ReorderableListView.builder(
+      scrollController: sc,
       buildDefaultDragHandles: false,
       itemBuilder: (context, index) {
         return ReorderableDragStartListener(
@@ -49,7 +72,7 @@ class SideImageViewState extends State<SideImageView> {
                   onPressed: () {
                     setState(() {
                       items.removeAt(index);
-                      colors.clear();
+                      select.clear();
                     });
                   }
                 ),
@@ -59,16 +82,12 @@ class SideImageViewState extends State<SideImageView> {
               onTap: () {
                 if (RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.controlLeft)) {
                   setState(() {
-                    if(colors.contains(index)) {
-                      colors.remove(index);
-                    } else {
-                      colors.add(index);
-                    }
+                    select.contains(index) ? select.remove(index) : select.add(index);
                   });
                 } else {
                   setState(() {
-                    colors.clear();
-                    colors.add(index);
+                    select.clear();
+                    select.add(index);
                   });
 
                   parent!.setState(() {
@@ -76,103 +95,154 @@ class SideImageViewState extends State<SideImageView> {
                   });
                 }
               },
-              child: Container(
-                color: colors.contains(index) ? Colors.blue : Colors.grey,
-                padding: const EdgeInsets.all(3),
-                child: Image.file(File(items[index].imagePath)),
-              )
+              child: DropTarget(
+                onDragDone: (details) {
+                  RenderBox rb = items[index].globalKey.currentContext!.findRenderObject() as RenderBox;
+                  double half = rb.size.height / 2;
+
+                  int insertIdx = (details.localPosition.dy < half) ? index : index + 1;
+
+                  List<ItemClass> arr = [];
+                  for(var i in details.files) {
+                    ItemClass it = ItemClass(i.path);
+                    if(!items.contains(it)) {
+                      arr.add(it);
+                    }
+                  }
+
+                  setState(() {
+                    items.insertAll(insertIdx, arr);
+                  });
+                },
+                onDragUpdated: (details) {
+                  RenderSliverList rb = context.findRenderObject() as RenderSliverList;
+                  double scUp = rb.getAbsoluteSize().height * (1 / 4);
+                  double scDown = rb.getAbsoluteSize().height * (3 / 4);
+
+                  double dp = details.globalPosition.dy;
+                  double scroll = 0.0;
+                  if(dp < scUp) {
+                    scroll = sc.offset - 1000;
+                    if(sc.offset > sc.position.minScrollExtent) {
+                      sc.animateTo(scroll, duration: Duration(milliseconds: 2000), curve: Curves.ease);
+                    }
+                  } else if(dp > scDown) {
+                    scroll = sc.offset + 1000;
+                    if(sc.offset < sc.position.maxScrollExtent) {
+                      sc.animateTo(scroll, duration: Duration(milliseconds: 2000), curve: Curves.ease);
+                    }
+                  }
+                },
+                onDragEntered: (details) { },
+                onDragExited: (details) { },
+                child: DragTarget(
+                  builder: (context, candidateData, rejectedData) {
+                    return Container(
+                      alignment: Alignment.center,
+                      color: select.contains(index) ? Colors.blue : Colors.grey,
+                      padding: const EdgeInsets.all(3),
+                      child: Image.file(key: items[index].globalKey, File(items[index].imagePath))
+                    );
+                  },
+                  onWillAcceptWithDetails: (details) {
+                    return true;
+                  },
+                  onAcceptWithDetails: (details) {
+                    RenderBox rb = items[index].globalKey.currentContext!.findRenderObject() as RenderBox;
+                    double half = rb.size.height / 2;
+                    double point = rb.globalToLocal(details.offset).dy + 75;
+                    
+                    int fromIdx = items.indexOf(ItemClass(details.data as String));
+                    int toIdx = (point < half) ? index : index + 1;
+                    
+                    reorderOneItem(fromIdx, toIdx);
+                  },
+                  onMove: (details) {
+                    RenderSliverList rb = context.findRenderObject() as RenderSliverList;
+                    double scUp = rb.getAbsoluteSize().height * (1 / 4);
+                    double scDown = rb.getAbsoluteSize().height * (3 / 4);
+
+                    double dp = details.offset.dy + 75;
+                    double scroll = 0.0;
+                    if(dp < scUp) {
+                      scroll = sc.offset - 100;
+                      if(sc.offset > sc.position.minScrollExtent) {
+                        sc.animateTo(scroll, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                      }
+                    } else if(dp > scDown) {
+                      scroll = sc.offset + 100;
+                      if(sc.offset < sc.position.maxScrollExtent) {
+                        sc.animateTo(scroll, duration: Duration(milliseconds: 200), curve: Curves.linear);
+                      }
+                    } else {
+                      sc.jumpTo(sc.position.pixels);
+                    }
+                  },
+                  // onLeave: (data) {
+                  //   sc.jumpTo(sc.position.pixels);
+                  // },
+                )
+              ),
             )
-          ),
+          )
         );
       },
       itemCount: items.length,
       onReorder: (int oldIdx, int newIdx) {
-        List tmp = colors.toList();
+        List tmp = select.toList();
         tmp.sort();
 
         // 하나의 아이템
-        if(!colors.contains(oldIdx) || tmp.length <= 1) {
-          setState(() {
-            if (oldIdx < newIdx) {
-              newIdx -= 1;
-            }
-            
-            final item = items.removeAt(oldIdx);
-            items.insert(newIdx, item);
-          });
+        if(!select.contains(oldIdx) || tmp.length <= 1) {
+          reorderOneItem(oldIdx, newIdx);
         } else { // 여러 아이템
-          setState(() { 
-            List<ItemClass> arr = [];
-            int idx = 0;
-            for(var i in items) {
-              if(!colors.contains(idx)) {
-                arr.add(i);
-              }
-              idx++;
+          List<ItemClass> arr = [];
+          int idx = 0;
+          for(var i in items) {
+            if(!select.contains(idx)) {
+              arr.add(i);
             }
+            idx++;
+          }
 
-            List<ItemClass> it = [];
-            for(var i in tmp) {
-              it.add(items[i]);
-            }
+          List<ItemClass> it = [];
+          for(var i in tmp) {
+            it.add(items[i]);
+          }
 
-            if(newIdx >= items.length) {
-              arr.addAll(it);
+          if(newIdx >= items.length) {
+            arr.addAll(it);
+          } else {
+            final to = items[newIdx];
+            if (arr.contains(to)) {
+              int toMoveIndex = arr.indexOf(to);
+              arr.insertAll(toMoveIndex, it);
             } else {
-              final to = items[newIdx];
-              if (arr.contains(to)) {
-                int toMoveIndex = arr.indexOf(to);
-                arr.insertAll(toMoveIndex, it);
-              } else {
-                while(true) {
-                  newIdx--;
-                  if(newIdx < 0) {
-                    newIdx = 0;
-                  }
-                  final to = items[newIdx];
-                  if(newIdx == 0 || arr.contains(to)) {
-                    int toMoveIndex = arr.indexOf(to);
-                    arr.insertAll(toMoveIndex + 1, it);
-                    break;
-                  }
+              while(true) {
+                newIdx--;
+                newIdx = (newIdx < 0) ? 0 : newIdx;
+
+                final to = items[newIdx];
+                if(newIdx == 0 || arr.contains(to)) {
+                  int toMoveIndex = arr.indexOf(to);
+                  arr.insertAll(toMoveIndex + 1, it);
+                  break;
                 }
               }
             }
+          }
 
-            items.clear();
-            items.addAll(arr);
-          });
+          items.clear();
+          items.addAll(arr);
         }
 
-        colors.clear();
+        select.clear();
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return DropTarget(
-      onDragDone: (detail) async {
-        setState(() {
-          for (var i in detail.files) {
-            final it = ItemClass(i.path);
-            if(!items.contains(it)) {
-              items.add(it);
-            }
-          }
-        });
-      },
-      onDragEntered: (detail) {
-        setState(() {
-          
-        });
-      },
-      onDragExited: (detail) {
-        setState(() {
-
-        });
-      },
-      child: makeContainer(context),
-    );
+    return makeContainer(context);
   }
 }

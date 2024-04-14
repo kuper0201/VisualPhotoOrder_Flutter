@@ -26,7 +26,6 @@ class SortViewState extends State<SortView> {
     DesktopWindow.setWindowSize(const Size(900, 600));
 
     return SplitView(
-      children: [UpperSplitView(), LowerSplitView()],
       viewMode: SplitViewMode.Vertical,
       indicator: const SplitIndicator(viewMode: SplitViewMode.Vertical),
       activeIndicator: const SplitIndicator(
@@ -42,6 +41,7 @@ class SortViewState extends State<SortView> {
           weight = 0.2;
         }
       },
+      children: const [UpperSplitView(), LowerSplitView()],
     );
   }
 }
