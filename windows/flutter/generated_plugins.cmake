@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
-  desktop_multi_window
   desktop_window
   url_launcher_windows
 )

@@ -18,11 +18,15 @@ class SortView extends StatefulWidget {
 class SortViewState extends State<SortView> {
   String selectedImg = "";
   double weight = 0.8;
+
+  @override
+  void initState() {
+    super.initState();
+    DesktopWindow.setWindowSize(const Size(900, 600));
+  }
   
   @override
-  Widget build(BuildContext context) {
-    DesktopWindow.setWindowSize(const Size(900, 600));
-    
+  Widget build(BuildContext context) {    
     return ContextMenuOverlay(
       buttonStyle: const ContextMenuButtonStyle(
         fgColor: Colors.red,

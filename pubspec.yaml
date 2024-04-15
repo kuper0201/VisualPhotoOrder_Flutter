@@ -33,7 +33,6 @@ dependencies:
   file_picker: ^6.1.1
   desktop_drop: ^0.4.4
   desktop_window: ^0.4.0
-  desktop_multi_window: ^0.2.0
   context_menus: ^1.0.2
   split_view: ^3.2.1
   path_provider: ^2.1.1
@@ -44,6 +43,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   cross_file: ^0.3.3+6
+  change_app_package_name: ^1.1.0
+  rename: ^3.0.2
 
 dev_dependencies:
   flutter_test:
