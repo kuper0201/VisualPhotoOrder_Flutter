@@ -3,15 +3,12 @@ import 'dart:io';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:context_menus/context_menus.dart';
-import 'package:flutter_application_1/split_views/lower_split.dart';
-import 'package:flutter_application_1/split_views/upper_split.dart';
+import 'package:flutter_application_1/right_view.dart';
+import 'package:flutter_application_1/left_view.dart';
 import 'package:split_view/split_view.dart';
-
-import 'side_image_view.dart';
 
 class SortView extends StatefulWidget {
   static const routeName = '/sort_view';
-
   const SortView({Key? key}) : super(key: key);
 
   @override
@@ -19,29 +16,42 @@ class SortView extends StatefulWidget {
 }
 
 class SortViewState extends State<SortView> {
-  double weight = 0.2;
-
+  String selectedImg = "";
+  double weight = 0.8;
+  
   @override
   Widget build(BuildContext context) {
     DesktopWindow.setWindowSize(const Size(900, 600));
-
-    return SplitView(
-      viewMode: SplitViewMode.Vertical,
-      indicator: const SplitIndicator(viewMode: SplitViewMode.Vertical),
-      activeIndicator: const SplitIndicator(
-        viewMode: SplitViewMode.Vertical,
-        isActive: true,
+    
+    return ContextMenuOverlay(
+      buttonStyle: const ContextMenuButtonStyle(
+        fgColor: Colors.red,
+        hoverBgColor: Colors.red,
       ),
-      controller: SplitViewController(weights: [null, weight], limits: [null, WeightLimit(min:0.1, max: 0.3)]),
-      onWeightChanged: (w) {
-        double? wei = List.of(w)[1];
-        if(wei != null) {
-          weight = wei;
-        } else {
-          weight = 0.2;
-        }
-      },
-      children: const [UpperSplitView(), LowerSplitView()],
+      child: Scaffold(
+        backgroundColor: Colors.grey,
+        body: SplitView(
+          viewMode: SplitViewMode.Horizontal,
+          indicator: const SplitIndicator(viewMode: SplitViewMode.Horizontal),
+          activeIndicator: const SplitIndicator(
+            viewMode: SplitViewMode.Horizontal,
+            isActive: true,
+          ),
+          controller: SplitViewController(weights: [null, weight], limits: [null, WeightLimit(min:0.6, max: 0.9)]),
+          onWeightChanged: (w) {
+            double? wei = List.of(w)[1];
+            if(wei != null) {
+              weight = wei;
+            } else {
+              weight = 0.8;
+            }
+          },
+          children: [
+            const Center(child: LeftView()),
+            RightView(selectedImg: selectedImg)
+          ],
+        )
+      ),
     );
   }
 }

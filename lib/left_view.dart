@@ -7,16 +7,16 @@ import 'package:context_menus/context_menus.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Model/ItemClass.dart';
-import 'package:flutter_application_1/split_views/upper_split.dart';
+import 'package:flutter_application_1/sort_view.dart';
 
-class SideImageView extends StatefulWidget {
-  const SideImageView({Key? key}) : super(key: key);
+class LeftView extends StatefulWidget {
+  const LeftView({Key? key}) : super(key: key);
 
   @override
-  SideImageViewState createState() => SideImageViewState();
+  LeftViewState createState() => LeftViewState();
 }
 
-class SideImageViewState extends State<SideImageView> {
+class LeftViewState extends State<LeftView> {
   List<ItemClass> items = [];
   Set select = {};
   Timer? _timer;
@@ -117,7 +117,7 @@ class SideImageViewState extends State<SideImageView> {
   }
 
   ReorderableListView makeContainer(BuildContext context) {
-    UpperSplitViewState? parent = context.findAncestorStateOfType<UpperSplitViewState>();
+    SortViewState? parent = context.findAncestorStateOfType<SortViewState>();
 
     return ReorderableListView.builder(
       scrollController: sc,
