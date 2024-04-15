@@ -1,4 +1,3 @@
-import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
