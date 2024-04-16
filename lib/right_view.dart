@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:split_view/split_view.dart';
 
 class RightView extends StatefulWidget {
@@ -12,6 +13,7 @@ class RightView extends StatefulWidget {
 }
 
 class RightViewState extends State<RightView> {
+  TextEditingController tc = TextEditingController();
   double weight = 0.2;
 
   @override
@@ -41,7 +43,57 @@ class RightViewState extends State<RightView> {
           },
           child: Padding(padding: const EdgeInsets.all(5), child: Center(child: Image.file(File(widget.selectedImg))))
         ),
-        Container()
+        Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                children: [
+                  const Expanded(
+                    flex: 3,
+                    child: Text("파일명", style: TextStyle(fontSize: 18),),
+                  ),
+                  Expanded(
+                    flex: 7,
+                    child: TextField(
+                      controller: tc,
+                      maxLines: 1,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_]')),
+                      ],
+                      decoration: const InputDecoration(hintText: "파일명 입력"),)
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 7,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20), 
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          textStyle: const TextStyle(fontSize: 20),
+                          padding: const EdgeInsets.all(3),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3)
+                          ),
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        onPressed:() {
+                          print(tc.text);
+                        },
+                        child: const Text("저장 후 폴더 열기")
+                      )
+                    ,)
+                  )
+                ],
+              )
+            )
+          ],
+        )
       ],
     );
   }
