@@ -145,7 +145,7 @@ class LeftViewState extends State<LeftView> {
             ),
             child: GestureDetector(
               onTap: () {
-                if (RawKeyboard.instance.keysPressed.contains(LogicalKeyboardKey.controlLeft)) {
+                if (HardwareKeyboard.instance.isPhysicalKeyPressed(PhysicalKeyboardKey.controlLeft)) {
                   setState(() {
                     select.contains(index) ? select.remove(index) : select.add(index);
                   });
@@ -187,7 +187,6 @@ class LeftViewState extends State<LeftView> {
                   double scDown = rb.getAbsoluteSize().height * (3 / 4);
 
                   double dp = details.globalPosition.dy;
-                  double scroll = 0.0;
                   if(dp < scUp) {
                     scrollUp();
                   } else if(dp > scDown) {
@@ -229,7 +228,6 @@ class LeftViewState extends State<LeftView> {
                     double scDown = rb.getAbsoluteSize().height * (3 / 4);
 
                     double dp = details.offset.dy + 75;
-                    double scroll = 0.0;
                     if(dp < scUp) {
                       scrollUp();
                     } else if(dp > scDown) {
