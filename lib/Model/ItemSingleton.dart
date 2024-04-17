@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Model/ItemClass.dart';
 import 'package:open_dir/open_dir.dart';
 import 'package:path/path.dart' as path;
 import 'package:sn_progress_dialog/progress_dialog.dart';
+import 'package:visual_photo_order/Model/ItemClass.dart';
 
 class ItemSingleton {
   static final ItemSingleton instance = ItemSingleton._internal();

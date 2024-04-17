@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/Model/ItemSingleton.dart';
 import 'package:split_view/split_view.dart';
+
+import 'Model/ItemSingleton.dart';
 
 class RightView extends StatefulWidget {
   const RightView({Key? key, required this.selectedImg}) : super(key: key);

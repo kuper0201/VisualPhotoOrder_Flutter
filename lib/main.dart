@@ -5,10 +5,10 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:desktop_window/desktop_window.dart';
-import 'package:flutter_application_1/sort_view.dart';
 import 'package:mime/mime.dart';
 
 import 'Model/ItemClass.dart';
+import 'sort_view.dart';
 
 Future<void> main() async {
 	WidgetsFlutterBinding.ensureInitialized();

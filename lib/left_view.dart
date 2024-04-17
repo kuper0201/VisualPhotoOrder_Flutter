@@ -6,9 +6,10 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:context_menus/context_menus.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/Model/ItemClass.dart';
-import 'package:flutter_application_1/Model/ItemSingleton.dart';
-import 'package:flutter_application_1/sort_view.dart';
+
+import 'Model/ItemClass.dart';
+import 'Model/ItemSingleton.dart';
+import 'sort_view.dart';
 
 class LeftView extends StatefulWidget {
   const LeftView({Key? key}) : super(key: key);

@@ -1,11 +1,12 @@
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:context_menus/context_menus.dart';
-import 'package:flutter_application_1/Model/ItemSingleton.dart';
-import 'package:flutter_application_1/right_view.dart';
-import 'package:flutter_application_1/left_view.dart';
 import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:split_view/split_view.dart';
+
+import 'Model/ItemSingleton.dart';
+import 'left_view.dart';
+import 'right_view.dart';
 
 class SortView extends StatefulWidget {
   static const routeName = '/sort_view';
