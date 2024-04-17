@@ -19,7 +19,6 @@ class LeftView extends StatefulWidget {
 
 class LeftViewState extends State<LeftView> {
   ItemSingleton singleton = ItemSingleton();
-  // List<ItemClass> singleton.list = [];
   Set select = {};
   Timer? _timer;
   ScrollController sc = ScrollController();
