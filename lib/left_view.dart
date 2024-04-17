@@ -7,6 +7,7 @@ import 'package:context_menus/context_menus.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Model/ItemClass.dart';
+import 'package:flutter_application_1/Model/ItemSingleton.dart';
 import 'package:flutter_application_1/sort_view.dart';
 
 class LeftView extends StatefulWidget {
@@ -17,7 +18,8 @@ class LeftView extends StatefulWidget {
 }
 
 class LeftViewState extends State<LeftView> {
-  List<ItemClass> items = [];
+  ItemSingleton singleton = ItemSingleton();
+  // List<ItemClass> singleton.list = [];
   Set select = {};
   Timer? _timer;
   ScrollController sc = ScrollController();
@@ -30,7 +32,8 @@ class LeftViewState extends State<LeftView> {
       final args = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
       setState(() {
         List<ItemClass> its = args['path_list'] as List<ItemClass>;
-        items.addAll(its);
+        // singleton.list.addAll(its);
+        singleton.list.addAll(its);
       });
     });
   }
@@ -41,8 +44,8 @@ class LeftViewState extends State<LeftView> {
     }
 
     setState(() {
-      final item = items.removeAt(oldIdx);
-      items.insert(newIdx, item);
+      final item = singleton.list.removeAt(oldIdx);
+      singleton.list.insert(newIdx, item);
     });
   }
 
@@ -56,7 +59,7 @@ class LeftViewState extends State<LeftView> {
     } else { // 여러 아이템
       List<ItemClass> arr = [];
       int idx = 0;
-      for(var i in items) {
+      for(var i in singleton.list) {
         if(!select.contains(idx)) {
           arr.add(i);
         }
@@ -65,13 +68,13 @@ class LeftViewState extends State<LeftView> {
 
       List<ItemClass> it = [];
       for(var i in tmp) {
-        it.add(items[i]);
+        it.add(singleton.list[i]);
       }
 
-      if(newIdx >= items.length) {
+      if(newIdx >= singleton.list.length) {
         arr.addAll(it);
       } else {
-        final to = items[newIdx];
+        final to = singleton.list[newIdx];
         if (arr.contains(to)) {
           int toMoveIndex = arr.indexOf(to);
           arr.insertAll(toMoveIndex, it);
@@ -80,7 +83,7 @@ class LeftViewState extends State<LeftView> {
             newIdx--;
             newIdx = (newIdx < 0) ? 0 : newIdx;
 
-            final to = items[newIdx];
+            final to = singleton.list[newIdx];
             if(newIdx == 0 || arr.contains(to)) {
               int toMoveIndex = arr.indexOf(to);
               arr.insertAll(toMoveIndex + 1, it);
@@ -90,8 +93,8 @@ class LeftViewState extends State<LeftView> {
         }
       }
 
-      items.clear();
-      items.addAll(arr);
+      singleton.list.clear();
+      singleton.list.addAll(arr);
     }
 
     select.clear();
@@ -133,7 +136,7 @@ class LeftViewState extends State<LeftView> {
                   "Delete",
                   onPressed: () {
                     setState(() {
-                      items.removeAt(index);
+                      singleton.list.removeAt(index);
                       select.clear();
                     });
                   }
@@ -153,7 +156,7 @@ class LeftViewState extends State<LeftView> {
                   });
 
                   parent!.setState(() {
-                    parent.selectedImg = items[index].imagePath;
+                    parent.selectedImg = singleton.list[index].imagePath;
                   });
                 }
               },
@@ -161,7 +164,7 @@ class LeftViewState extends State<LeftView> {
                 onDragDone: (details) {
                   stopTimer();
 
-                  RenderBox rb = items[index].globalKey.currentContext!.findRenderObject() as RenderBox;
+                  RenderBox rb = singleton.list[index].globalKey.currentContext!.findRenderObject() as RenderBox;
                   double half = rb.size.height / 2;
 
                   int insertIdx = (details.localPosition.dy < half) ? index : index + 1;
@@ -169,13 +172,13 @@ class LeftViewState extends State<LeftView> {
                   List<ItemClass> arr = [];
                   for(var i in details.files) {
                     ItemClass it = ItemClass(i.path);
-                    if(!items.contains(it)) {
+                    if(!singleton.list.contains(it)) {
                       arr.add(it);
                     }
                   }
 
                   setState(() {
-                    items.insertAll(insertIdx, arr);
+                    singleton.list.insertAll(insertIdx, arr);
                   });
                 },
                 onDragUpdated: (details) {
@@ -203,7 +206,7 @@ class LeftViewState extends State<LeftView> {
                       alignment: Alignment.center,
                       color: select.contains(index) ? Colors.blue : Colors.grey,
                       padding: const EdgeInsets.all(3),
-                      child: Image.file(key: items[index].globalKey, File(items[index].imagePath))
+                      child: Image.file(key: singleton.list[index].globalKey, File(singleton.list[index].imagePath))
                     );
                   },
                   onWillAcceptWithDetails: (details) {
@@ -211,11 +214,11 @@ class LeftViewState extends State<LeftView> {
                   },
                   onAcceptWithDetails: (details) {
                     stopTimer();
-                    RenderBox rb = items[index].globalKey.currentContext!.findRenderObject() as RenderBox;
+                    RenderBox rb = singleton.list[index].globalKey.currentContext!.findRenderObject() as RenderBox;
                     double half = rb.size.height / 2;
                     double point = rb.globalToLocal(details.offset).dy + 75;
                     
-                    int fromIdx = items.indexOf(ItemClass(details.data as String));
+                    int fromIdx = singleton.list.indexOf(ItemClass(details.data as String));
                     int toIdx = (point < half) ? index : index + 1;
                     
                     reorderOneItem(fromIdx, toIdx);
@@ -244,7 +247,7 @@ class LeftViewState extends State<LeftView> {
           )
         );
       },
-      itemCount: items.length,
+      itemCount: singleton.list.length,
       onReorder: (int oldIdx, int newIdx) {
         reorderMultiItems(oldIdx, newIdx);
       },

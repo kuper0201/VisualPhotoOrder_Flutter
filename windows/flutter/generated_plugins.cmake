@@ -5,6 +5,8 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   desktop_window
+  flutter_window_close
+  open_dir_windows
   url_launcher_windows
 )
 

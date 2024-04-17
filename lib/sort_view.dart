@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:context_menus/context_menus.dart';
+import 'package:flutter_application_1/Model/ItemSingleton.dart';
 import 'package:flutter_application_1/right_view.dart';
 import 'package:flutter_application_1/left_view.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:split_view/split_view.dart';
 
 class SortView extends StatefulWidget {
@@ -23,6 +25,41 @@ class SortViewState extends State<SortView> {
   void initState() {
     super.initState();
     DesktopWindow.setWindowSize(const Size(900, 600));
+
+    FlutterWindowClose.setWindowShouldCloseHandler(() async {
+      return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('프로그램을 종료하시겠습니까?\n저장되지 않은 사항은 사라집니다.'),
+            actions: [
+              ElevatedButton(
+                onPressed: () async {
+                  await ItemSingleton().saveAll(context, "");
+                  if(context.mounted) {
+                    Navigator.of(context).pop(true);
+                  }
+                },
+                child: const Text('저장')
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('저장 안함')
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('취소')
+              ),
+            ]
+          );
+        }
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
   
   @override
@@ -55,7 +92,7 @@ class SortViewState extends State<SortView> {
             RightView(selectedImg: selectedImg)
           ],
         )
-      ),
+      )
     );
   }
 }
