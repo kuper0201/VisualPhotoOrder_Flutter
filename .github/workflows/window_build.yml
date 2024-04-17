@@ -29,5 +29,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           type: 'zip'
-          name: VisualPhotoOrder_win_x64.zip
+          name: VisualPhotoOrder_win_x64
           path: build\windows\x64\runner\Release
