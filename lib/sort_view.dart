@@ -19,6 +19,7 @@ class SortView extends StatefulWidget {
 class SortViewState extends State<SortView> {
   String selectedImg = "";
   double weight = 0.8;
+  bool onCloseDialog = false;
 
   @override
   void initState() {
@@ -26,6 +27,9 @@ class SortViewState extends State<SortView> {
     DesktopWindow.setWindowSize(const Size(900, 600));
 
     FlutterWindowClose.setWindowShouldCloseHandler(() async {
+      if(onCloseDialog) return false;
+
+      onCloseDialog = true;
       return await showDialog(
         context: context,
         builder: (context) {
@@ -46,7 +50,10 @@ class SortViewState extends State<SortView> {
                 child: const Text('저장 안함')
               ),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(false),
+                onPressed: () {
+                  onCloseDialog = false;
+                  Navigator.of(context).pop(false);
+                },
                 child: const Text('취소')
               ),
             ]
