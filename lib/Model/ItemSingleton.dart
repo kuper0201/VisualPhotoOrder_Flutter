@@ -21,6 +21,7 @@ class ItemSingleton {
     }
     
     if(!context.mounted) return;
+    
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: list.length, msg: '저장중입니다...');
 

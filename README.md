@@ -1,16 +1,21 @@
-# flutter_application_1
+# Visual Photo Order
 
-A new Flutter project.
+<img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=Dart&logoColor=white"> <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=Flutter&logoColor=white"> <img src="https://img.shields.io/badge/Windows-0078D4?style=for-the-badge&logo=Windows&logoColor=white">
 
-## Getting Started
+> A Desktop application for ordering photos with GUI.
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- Reorder images using drag.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Install
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Windows
+
+  - <a href="https://github.com/kuper0201/VisualPhotoOrder_Flutter/releases/latest">Github Release</a>
+
+## Change Log
+
+2024.04.17.
+
+  - Release: First release of Visual Photo Order.
