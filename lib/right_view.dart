@@ -15,7 +15,6 @@ class RightView extends StatefulWidget {
 }
 
 class RightViewState extends State<RightView> {
-  TextEditingController tc = TextEditingController();
   double weight = 0.2;
 
   @override
@@ -56,10 +55,14 @@ class RightViewState extends State<RightView> {
                   Expanded(
                     flex: 7,
                     child: TextField(
-                      controller: tc,
                       maxLines: 1,
                       inputFormatters: [ FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9_]')) ],
-                      decoration: const InputDecoration(hintText: "파일명 입력"))
+                      decoration: const InputDecoration(hintText: "파일명 입력", border: OutlineInputBorder()),
+                      onChanged: (value) {
+                        final single = ItemSingleton();
+                        single.saveName = value;
+                      },
+                    )
                   )
                 ],
               ),
@@ -81,7 +84,7 @@ class RightViewState extends State<RightView> {
                           minimumSize: const Size.fromHeight(50)
                         ),
                         onPressed:() {
-                          ItemSingleton().saveAll(context, tc.text);
+                          ItemSingleton().saveAll(context);
                         },
                         child: const Text("저장 후 폴더 열기")
                       )

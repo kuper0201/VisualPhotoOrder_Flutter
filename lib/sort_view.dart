@@ -49,7 +49,7 @@ class SortViewState extends State<SortView> {
           actions: [
             ElevatedButton(
               onPressed: () async {
-                await ItemSingleton().saveAll(context, "");
+                await ItemSingleton().saveAll(context);
                 if(context.mounted) {
                   Navigator.of(context).pop(true);
                 }
