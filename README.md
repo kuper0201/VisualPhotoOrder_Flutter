@@ -4,6 +4,23 @@
 
 > A Desktop application for ordering photos with GUI.
 
+## Preview
+
+<div align="center">
+  <table>
+    <tr align="center">
+      <th>Select Directory</th>
+      <th>Reorder Images</th>
+      <th>On Exit</th>
+    </tr>
+    <tr align="center">
+      <td><img src="ScreenShot/start.png" width="250"/></td>
+      <td><img src="ScreenShot/imgs.png" width="250"/></td>
+      <td><img src="ScreenShot/exit.png" width="250"/></td>
+    </tr>
+  </table>
+</div>
+
 ## Features
 
 - Reorder images using drag.
