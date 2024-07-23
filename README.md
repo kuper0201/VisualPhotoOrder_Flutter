@@ -10,13 +10,15 @@
   <table>
     <tr align="center">
       <th>Select Directory</th>
-      <th>Reorder Images</th>
-      <th>On Exit</th>
+      <td><img src="ScreenShot/start.png" width="400"/></td>
     </tr>
     <tr align="center">
-      <td><img src="ScreenShot/start.png" width="250"/></td>
-      <td><img src="ScreenShot/imgs.png" width="250"/></td>
-      <td><img src="ScreenShot/exit.png" width="250"/></td>
+      <th>Reorder Images</th>
+      <td><img src="ScreenShot/imgs.png" width="500"/></td>
+    </tr>
+    <tr align="center">
+      <th>On Exit</th>
+      <td><img src="ScreenShot/exit.png" width="500"/></td>
     </tr>
   </table>
 </div>
