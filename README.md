@@ -26,6 +26,8 @@
 ## Features
 
 - Reorder images using drag.
+- Support multi-image reorder.
+- Insert external images with drag and drop.
 
 ## Install
 
