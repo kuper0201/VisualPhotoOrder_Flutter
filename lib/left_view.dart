@@ -6,6 +6,7 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:context_menus/context_menus.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:mime/mime.dart';
 
 import 'Model/ItemClass.dart';
 import 'Model/ItemSingleton.dart';
@@ -172,7 +173,8 @@ class LeftViewState extends State<LeftView> {
                   List<ItemClass> arr = [];
                   for(var i in details.files) {
                     ItemClass it = ItemClass(i.path);
-                    if(!singleton.list.contains(it)) {
+                    final fileType = lookupMimeType(i.path);
+                    if(fileType != null && fileType.startsWith('image/') && !singleton.list.contains(it)) {
                       arr.add(it);
                     }
                   }

@@ -33,7 +33,7 @@ dependencies:
   file_picker: ^6.1.1
   desktop_drop: ^0.4.4
   desktop_window: ^0.4.0
-  context_menus: ^1.0.2
+  context_menus: ^2.0.0+1
   split_view: ^3.2.1
   path_provider: ^2.1.1
   mime: ^1.0.4

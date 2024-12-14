@@ -123,7 +123,7 @@ class FileDragAndDropState extends State<FileDragAndDrop> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text("Dialog Content",),
+                          Text("Directory is empty",),
                         ],
                       ),
                       actions: <Widget>[
